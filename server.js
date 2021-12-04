@@ -1,5 +1,5 @@
 const express = require("express");
-const fibonacciSeries = require("./fibonacci-series/FibonacciSeries");
+const fibonacciSeries = require("./math-logic/FibonacciSeries");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
