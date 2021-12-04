@@ -4,13 +4,15 @@
   "description": "",
   "main": "cluster.js",
   "scripts": {
-    "start": "pm2 start ./pmServer.js -i 0"
+    "start": "pm2 start ./pmServer.js -i 0",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "nodemon": "^2.0.15",
     "pm2": "^5.1.0"
   }
 }
