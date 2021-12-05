@@ -4,21 +4,23 @@ const express = require("express");
 const cluster = require("cluster");
 const crypto = require("crypto");
 
-if (cluster.isMaster) {
-  cluster.fork();
-  cluster.fork();
-  cluster.fork();
-  cluster.fork();
-  cluster.fork();
-  cluster.fork();
-} else {
-  const app = express();
+console.log(cluster.Worker())
 
-  app.get("/", (req, res) => {
-    crypto.pbkdf2("a", "b", 100000, 512, "sha512", (err, resp) => {
-      res.send("hi there");
-    });
-  });
+// if (cluster.isMaster) {
+//   cluster.fork();
+//   cluster.fork();
+//   cluster.fork();
+//   cluster.fork();
+//   cluster.fork();
+//   cluster.fork();
+// } else {
+//   const app = express();
 
-  app.listen(3000);
-}
+//   app.get("/", (req, res) => {
+//     crypto.pbkdf2("a", "b", 100000, 512, "sha512", (err, resp) => {
+//       res.send("hi there");
+//     });
+//   });
+
+//   app.listen(3000);
+// }
