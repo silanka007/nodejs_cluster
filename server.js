@@ -1,33 +1,44 @@
 const express = require("express");
-const fibonacciSeries = require("./math-logic/FibonacciSeries");
-const os = require("os");
+const childProcess = require("child_process");
 const cluster = require("cluster");
 
 if (cluster.isMaster) {
-  for (let i = 0; i < os.cpus().length; i++) {
-    cluster.fork();
-  }
+  const worker1 = childProcess.fork("./workers/fib1.js");
+  const worker2 = childProcess.fork("./workers/fib2.js");
+  // console.log({worker1, worker2})
+  worker1.on("message", (res) => {
+    console.log(`result from fib 1: ${res.result}, number: ${res.number}`);
+  });
+  worker2.on("message", (res) => {
+    console.log(`result from fib 2: ${res.result}, number: ${res.number}`);
+  });
+
   cluster.on("online", (worker) => {
-    // if(worker.id % 2 === 0) {
-    //   worker.kill()
-    // }
-    console.log(`Worker Id: ${worker.id}, process Id: ${worker.process.pid}`);
+    worker.on("message", (number) => {
+      if (number % 2 === 0) {
+        worker1.send(number);
+      } else {
+        worker2.send(number);
+      }
+    });
   });
-  cluster.on("exit", (worker) => {
-    console.log(`worker id: ${worker.id} offline. Creating new worker...`);
-    cluster.fork();
-  });
+
+  // needed to fork child processes from cluster so as to start express server
+  cluster.fork();
+  cluster.fork();
 } else {
   const app = express();
   const PORT = process.env.PORT || 3000;
 
   app.get("/", (req, res) => {
-    console.log(`worker process ${cluster.worker.process.pid} has accepted the request!`)
     const { number } = req.query;
-    const fibVal = fibonacciSeries.calculateFibonacciValue(parseInt(number));
-    return res.send({ number, fibVal });
+    process.send(number);
+    return res.send(
+      "Request received successfully. check console for result of the evaluation..."
+    );
   });
+
   app.listen(PORT, () => {
-    console.log(`listening on port: ${PORT}`);
+    console.log("listening on port: " + PORT);
   });
 }
