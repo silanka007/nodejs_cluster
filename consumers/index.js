@@ -26,7 +26,6 @@ class Consumer {
 
 const consumer1 = new Consumer(FIB_QUEUE1);
 consumer1.consume();
-console.log(consumer1);
 
 const consumer2 = new Consumer(FIB_QUEUE2);
 consumer2.consume();
