@@ -9,7 +9,7 @@ module.exports = {
     {
       name: "consumers",
       script: "./consumers/index.js",
-      instance: "1",
+      instances: "1",
     },
   ],
 };
